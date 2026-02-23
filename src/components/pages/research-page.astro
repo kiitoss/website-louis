@@ -1,0 +1,26 @@
+---
+import Layout from '@/layouts/main.astro'
+import { ResearchList } from '@/components/ResearchList'
+import { Separator } from '@/components/ui/separator'
+import { useTranslations, defaultLang } from '@/i18n'
+
+const lang = Astro.currentLocale ?? defaultLang
+const t = useTranslations(lang)
+---
+
+<Layout
+  title={`${t.research.heading} | Louis Chataignier`}
+  description={t.research.description}
+>
+  <div class="mx-auto max-w-3xl px-6 py-4">
+    <header class="flex flex-col gap-3">
+      <h1 class="text-3xl font-semibold tracking-tight text-foreground md:text-4xl">
+        {t.research.heading}
+      </h1>
+    </header>
+
+    <Separator className="my-4" />
+
+    <ResearchList lang={lang} />
+  </div>
+</Layout>

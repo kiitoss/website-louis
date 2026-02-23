@@ -1,0 +1,103 @@
+---
+import Layout from "@/layouts/main.astro";
+import { Button } from "@/components/ui/button";
+import { useTranslations, defaultLang } from "@/i18n";
+import { Mail, Phone } from "lucide-react";
+
+const lang = Astro.currentLocale ?? defaultLang;
+const t = useTranslations(lang);
+
+const supervisorLink = (href: string, name: string) =>
+  `<a href="${href}" target="_blank" rel="noopener noreferrer" class="text-primary underline-offset-2 hover:underline">${name}</a>`;
+
+const introHtml = t.home.introduction
+  .replace(
+    "{{supervisor1}}",
+    supervisorLink("https://www.math.univ-toulouse.fr/~mpain/", "Michel Pain"),
+  )
+  .replace(
+    "{{supervisor2}}",
+    supervisorLink(
+      "https://www.math.univ-toulouse.fr/~pmaillar/",
+      "Pascal Maillard",
+    ),
+  );
+
+const cvHref = lang === "fr" ? "/cv-fr.pdf" : "/cv-en.pdf";
+---
+
+<Layout
+  title="Louis Chataignier"
+  description={t.home.introduction.replace(/\{\{.*?\}\}/g, "")}
+>
+  <div class="flex w-full flex-col md:flex-row justify-center">
+    <!-- Left: profile sidebar -->
+    <aside
+      class="bg-muted md:bg-transparent flex shrink-0 flex-col items-center justify-center
+                  gap-5 py-14
+                  min-h-[calc(100svh-4rem)] md:min-h-0
+                  md:w-72 lg:w-80"
+    >
+      <img
+        src="/images/profile.webp"
+        alt="Portrait de Louis Chataignier"
+        width="220"
+        height="220"
+        class="h-70 w-70 rounded-full object-cover shadow-2xl"
+      />
+
+      <div class="flex flex-col items-center gap-1 text-center">
+        <h1
+          class="text-xl font-semibold tracking-tight text-foreground sm:text-2xl"
+        >
+          Louis Chataignier
+        </h1>
+        <p class="text-sm text-muted-foreground">{t.home.job}</p>
+        <p class="text-sm text-muted-foreground">{t.home.localisation}</p>
+      </div>
+
+      <div class="flex flex-col gap-2">
+        <a
+          href={`mailto:${t.site.mail}`}
+          class="flex justify-center items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-primary"
+        >
+          <Mail className="h-4 w-4 shrink-0" />
+          <span>{t.site.mail}</span>
+        </a>
+        <a
+          href={`tel:${t.site.phone.replace(/\s+/g, "")}`}
+          class="flex justify-center items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-primary"
+        >
+          <Phone className="h-4 w-4 shrink-0" />
+          <span>{t.site.phone}</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Right: welcome + intro + CV -->
+    <article
+      class="flex flex-col items-center justify-center gap-6
+                    px-8 py-14 sm:px-12
+                    md:items-start md:max-w-xl"
+    >
+      <h2 class="text-2xl font-semibold text-foreground">
+        {t.home.welcome}
+      </h2>
+
+      <p
+        set:html={introHtml}
+        class="text-center leading-relaxed text-muted-foreground md:text-left"
+      />
+
+      <div class="mt-2">
+        <Button
+          size="lg"
+        >
+          <a href={cvHref} download>
+            {t.home.downloadCv}
+          </a>
+        </Button>
+      </div>
+    </article>
+  </div>
+</Layout>
