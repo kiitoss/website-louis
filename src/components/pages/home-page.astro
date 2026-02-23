@@ -23,7 +23,7 @@ const introHtml = t.home.introduction
     ),
   );
 
-const cvHref = lang === "fr" ? "/cv-fr.pdf" : "/cv-en.pdf";
+const cvHref = lang === "fr" ? `${import.meta.env.BASE_URL}cv-fr.pdf` : `${import.meta.env.BASE_URL}cv-en.pdf`;
 ---
 
 <Layout
@@ -39,7 +39,7 @@ const cvHref = lang === "fr" ? "/cv-fr.pdf" : "/cv-en.pdf";
                   md:w-72 lg:w-80"
     >
       <img
-        src="/images/profile.webp"
+        src={`${import.meta.env.BASE_URL}images/profile.webp`}
         alt="Portrait de Louis Chataignier"
         width="220"
         height="220"

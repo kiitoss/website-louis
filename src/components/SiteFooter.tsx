@@ -34,17 +34,17 @@ export function SiteFooter() {
         <div className="flex flex-col items-center gap-3 md:items-end">
           <div className="flex items-center gap-5">
             <img
-              src="/images/institut-mathematiques.webp"
+              src={`${import.meta.env.BASE_URL}images/institut-mathematiques.webp`}
               alt="Institut de Mathématiques de Toulouse"
               className="max-h-9 max-w-[30vw] object-contain"
             />
             <img
-              src="/images/universite-toulouse.webp"
+              src={`${import.meta.env.BASE_URL}images/universite-toulouse.webp`}
               alt="Université de Toulouse"
               className="max-h-9 max-w-[30vw] object-contain"
             />
             <img
-              src="/images/cnrs.webp"
+              src={`${import.meta.env.BASE_URL}images/cnrs.webp`}
               alt="CNRS"
               className="max-h-9 max-w-[30vw] object-contain"
             />
