@@ -1,7 +1,7 @@
 ---
 import { getRelativeLocaleUrl } from 'astro:i18n'
-import { SiteHeader } from '@/components/SiteHeader'
-import { SiteFooter } from '@/components/SiteFooter'
+import SiteHeader from '@/components/SiteHeader.astro'
+import SiteFooter from '@/components/SiteFooter.astro'
 import { useTranslations, defaultLang } from '@/i18n'
 import '../styles/global.css'
 
@@ -69,7 +69,6 @@ const navItems = [
         navItems={navItems}
         frUrl={frUrl}
         enUrl={enUrl}
-        client:load
       />
       <main class="flex-1">
         <slot />

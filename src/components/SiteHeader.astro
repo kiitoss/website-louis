@@ -1,0 +1,182 @@
+---
+import { cn } from "@/lib/utils"
+import { buttonVariants } from "@/components/ui/button"
+
+interface NavItem {
+  label: string
+  href: string
+}
+
+interface Props {
+  currentPath: string
+  lang: string
+  navItems: NavItem[]
+  frUrl: string
+  enUrl: string
+}
+
+const { currentPath, lang, navItems, frUrl, enUrl } = Astro.props
+
+function normalize(path: string) {
+  return path.replace(/\/$/, '') || '/'
+}
+const isActive = (href: string) => normalize(currentPath) === normalize(href)
+
+const base = import.meta.env.BASE_URL
+
+const langButtonClass = cn(
+  buttonVariants({ variant: "ghost", size: "sm" }),
+  "gap-1.5 px-2 text-muted-foreground hover:text-foreground cursor-pointer"
+)
+---
+
+<header class="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
+  <div class="mx-auto flex max-w-3xl items-center justify-between px-6 py-4">
+    <a
+      href={navItems[0]?.href}
+      class="font-sans text-lg font-semibold tracking-tight text-foreground transition-colors hover:text-primary"
+    >
+      Louis Chataignier
+    </a>
+
+    <div class="flex items-center gap-2">
+      <!-- Desktop nav -->
+      <nav class="hidden items-center gap-8 md:flex mr-4" aria-label="Main navigation">
+        {navItems.map((item) => (
+          <a
+            href={item.href}
+            class={cn(
+              "text-sm tracking-wide transition-colors hover:text-primary",
+              isActive(item.href) ? "font-medium text-primary" : "text-muted-foreground"
+            )}
+          >
+            {item.label}
+          </a>
+        ))}
+      </nav>
+
+      <!-- Language switcher -->
+      <div class="relative" id="lang-switcher">
+        <button
+          id="lang-toggle"
+          class={langButtonClass}
+          aria-haspopup="true"
+          aria-expanded="false"
+          aria-label={lang === 'fr' ? 'Changer de langue' : 'Change language'}
+        >
+          <img
+            src={`${base}images/flag_${lang}.webp`}
+            alt={lang === 'fr' ? 'Français' : 'English'}
+            class="h-[13px] w-5 object-cover"
+          />
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+
+        <div
+          id="lang-menu"
+          class="hidden absolute right-0 top-full mt-1 z-50 min-w-36 overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md"
+          role="menu"
+        >
+          <a
+            href={frUrl}
+            class="flex items-center gap-2.5 cursor-pointer rounded-sm px-2 py-1.5 text-sm transition-colors hover:bg-accent hover:text-accent-foreground"
+            role="menuitem"
+          >
+            <img src={`${base}images/flag_fr.webp`} alt="Français" class="h-[13px] w-5 object-cover" />
+            <span>Français</span>
+            {lang === 'fr' && (
+              <svg xmlns="http://www.w3.org/2000/svg" class="ml-auto h-3.5 w-3.5 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+            )}
+          </a>
+          <a
+            href={enUrl}
+            class="flex items-center gap-2.5 cursor-pointer rounded-sm px-2 py-1.5 text-sm transition-colors hover:bg-accent hover:text-accent-foreground"
+            role="menuitem"
+          >
+            <img src={`${base}images/flag_en.webp`} alt="English" class="h-[13px] w-5 object-cover" />
+            <span>English</span>
+            {lang === 'en' && (
+              <svg xmlns="http://www.w3.org/2000/svg" class="ml-auto h-3.5 w-3.5 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+            )}
+          </a>
+        </div>
+      </div>
+
+      <!-- Mobile menu button -->
+      <button
+        id="menu-toggle"
+        class="md:hidden text-muted-foreground hover:text-foreground transition-colors"
+        aria-label="Ouvrir le menu"
+      >
+        <svg id="icon-menu" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <line x1="4" y1="6" x2="20" y2="6"></line>
+          <line x1="4" y1="12" x2="20" y2="12"></line>
+          <line x1="4" y1="18" x2="20" y2="18"></line>
+        </svg>
+        <svg id="icon-close" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile nav -->
+  <nav id="mobile-menu" class="hidden border-t border-border px-6 py-4 md:hidden" aria-label="Mobile navigation">
+    <div class="flex flex-col gap-3">
+      {navItems.map((item) => (
+        <a
+          href={item.href}
+          class={cn(
+            "mobile-nav-link text-sm tracking-wide transition-colors hover:text-primary py-1",
+            isActive(item.href) ? "font-medium text-primary" : "text-muted-foreground"
+          )}
+        >
+          {item.label}
+        </a>
+      ))}
+    </div>
+  </nav>
+</header>
+
+<script>
+  // Mobile menu
+  const menuToggle = document.getElementById("menu-toggle")!;
+  const mobileMenu = document.getElementById("mobile-menu")!;
+  const iconMenu = document.getElementById("icon-menu")!;
+  const iconClose = document.getElementById("icon-close")!;
+
+  menuToggle.addEventListener("click", () => {
+    const isOpen = !mobileMenu.classList.contains("hidden");
+    mobileMenu.classList.toggle("hidden", isOpen);
+    iconMenu.classList.toggle("hidden", !isOpen);
+    iconClose.classList.toggle("hidden", isOpen);
+    menuToggle.setAttribute("aria-label", isOpen ? "Ouvrir le menu" : "Fermer le menu");
+  });
+
+  document.querySelectorAll(".mobile-nav-link").forEach((link) => {
+    link.addEventListener("click", () => {
+      mobileMenu.classList.add("hidden");
+      iconMenu.classList.remove("hidden");
+      iconClose.classList.add("hidden");
+      menuToggle.setAttribute("aria-label", "Ouvrir le menu");
+    });
+  });
+
+  // Language switcher
+  const langToggle = document.getElementById("lang-toggle")!;
+  const langMenu = document.getElementById("lang-menu")!;
+
+  langToggle.addEventListener("click", () => {
+    const isOpen = langMenu.classList.contains("hidden");
+    langMenu.classList.toggle("hidden", !isOpen);
+    langToggle.setAttribute("aria-expanded", String(isOpen));
+  });
+
+  document.addEventListener("click", (e) => {
+    if (!langToggle.contains(e.target as Node) && !langMenu.contains(e.target as Node)) {
+      langMenu.classList.add("hidden");
+      langToggle.setAttribute("aria-expanded", "false");
+    }
+  });
+</script>

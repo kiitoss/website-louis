@@ -1,0 +1,85 @@
+---
+interface CourseData {
+  titleKey: "introductionToProbability" | "measureTheory" | "introductionToStatistics"
+  level: string
+  role: "instructor" | "ta"
+  institution: string
+}
+
+const courseTitles: Record<string, Record<CourseData["titleKey"], string>> = {
+  en: {
+    introductionToProbability: "Introduction to probability theory",
+    measureTheory: "Measure theory",
+    introductionToStatistics: "Introduction to statistics",
+  },
+  fr: {
+    introductionToProbability: "Introduction aux probabilités",
+    measureTheory: "Théorie de la mesure",
+    introductionToStatistics: "Introduction aux statistiques",
+  },
+}
+
+const courseData: CourseData[] = [
+  {
+    titleKey: "introductionToProbability",
+    level: "L2, TD/TP (46h)",
+    role: "ta",
+    institution: "Institut de Mathématiques de Toulouse",
+  },
+  {
+    titleKey: "measureTheory",
+    level: "L3, TD (28h)",
+    role: "ta",
+    institution: "Institut de Mathématiques de Toulouse",
+  },
+  {
+    titleKey: "introductionToProbability",
+    level: "L2, TD/TP (46h)",
+    role: "ta",
+    institution: "Institut de Mathématiques de Toulouse",
+  },
+  {
+    titleKey: "introductionToStatistics",
+    level: "L2, lecture/TD (18h)",
+    role: "ta",
+    institution: "Institut de Mathématiques de Toulouse",
+  },
+]
+
+interface Props {
+  roleLabels: { instructor: string; ta: string }
+  lang?: string
+}
+
+const { roleLabels, lang = "fr" } = Astro.props
+const titles = courseTitles[lang] ?? courseTitles.fr
+---
+
+<div class="flex flex-col gap-5">
+  {courseData.map((course) => (
+    <div data-slot="card" class="bg-card text-card-foreground flex flex-col gap-3 rounded-lg border p-6 shadow-none">
+      <div class="flex flex-col gap-1.5 sm:flex-row sm:items-center sm:justify-between">
+        <div class="flex flex-col gap-1">
+          <h2 class="text-base font-semibold text-foreground">
+            {titles[course.titleKey]}
+          </h2>
+          <p class="text-sm text-muted-foreground">{course.institution}</p>
+        </div>
+        <div class="flex items-center gap-2 mt-1 sm:mt-0 shrink-0">
+          <span
+            data-slot="badge"
+            data-variant={course.role === "instructor" ? "default" : "secondary"}
+            class={course.role === "instructor"
+              ? "inline-flex items-center justify-center rounded-md border border-transparent px-2 py-0.5 text-xs font-medium w-fit whitespace-nowrap shrink-0 overflow-hidden transition-[color,box-shadow] bg-primary text-primary-foreground"
+              : "inline-flex items-center justify-center rounded-md border border-transparent px-2 py-0.5 text-xs font-medium w-fit whitespace-nowrap shrink-0 overflow-hidden transition-[color,box-shadow] bg-secondary text-secondary-foreground"}
+          >
+            {course.role === "instructor" ? roleLabels.instructor : roleLabels.ta}
+          </span>
+          <span class="text-sm text-muted-foreground whitespace-nowrap">
+            {course.level}
+          </span>
+        </div>
+      </div>
+    </div>
+  ))}
+</div>
